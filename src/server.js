@@ -1410,6 +1410,36 @@ const server = app.listen(PORT, "0.0.0.0", async () => {
     console.warn("[wrapper] WARNING: SETUP_PASSWORD is not set; /setup will error.");
   }
 
+  // ==== AGREGADO: sync de workspace-seed (skills/scripts/bootstrap del repo) ====
+  // Copia /app/workspace-seed/* hacia WORKSPACE_DIR para que las skills, scripts
+  // y bootstrap.sh definidos en el repo de Railway lleguen al volumen.
+  // No usa --delete: si el usuario crea skills extras via UI, se preservan.
+  const seedDir = "/app/workspace-seed";
+  if (fs.existsSync(seedDir)) {
+    console.log(`[wrapper] syncing workspace-seed: ${seedDir} -> ${WORKSPACE_DIR}`);
+    try {
+      await runCmd("rsync", [
+        "-a",
+        "--no-perms",
+        `${seedDir}/`,
+        `${WORKSPACE_DIR}/`,
+      ], { timeoutMs: 2 * 60 * 1000 });
+      try { fs.chmodSync(path.join(WORKSPACE_DIR, "bootstrap.sh"), 0o755); } catch {}
+      try {
+        const scriptsDir = path.join(WORKSPACE_DIR, "scripts");
+        if (fs.existsSync(scriptsDir)) {
+          for (const f of fs.readdirSync(scriptsDir)) {
+            fs.chmodSync(path.join(scriptsDir, f), 0o755);
+          }
+        }
+      } catch {}
+      console.log("[wrapper] workspace-seed sync complete");
+    } catch (err) {
+      console.warn(`[wrapper] workspace-seed sync failed (continuing): ${String(err)}`);
+    }
+  }
+  // =============================================================================
+
   // Optional operator hook to install/persist extra tools under /data.
   // This is intentionally best-effort and should be used to set up persistent
   // prefixes (npm/pnpm/python venv), not to mutate the base image.
