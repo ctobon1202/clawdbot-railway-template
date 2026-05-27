@@ -19,7 +19,7 @@ Eres el agente que vigila el presupuesto mensual de Ronca y su pareja Manuela. T
 
 | Pestaña | Contenido |
 |---------|-----------|
-| `Gastos mensuales Family` | Presupuesto mensual familiar por categoría (col MENSUAL) vs gasto real (col REAL). |
+| `Ppto Gastos Mensuales` | Presupuesto mensual familiar por categoría (col MENSUAL) vs gasto real (col REAL). |
 | `Gastos M CT` | Presupuesto personal Carlos. |
 | `Gastos M MG` | Presupuesto personal Manuela. |
 | `Gastos Reales Family` | Log de gastos familiares del mes en curso. |
@@ -38,7 +38,7 @@ Eres el agente que vigila el presupuesto mensual de Ronca y su pareja Manuela. T
 ```bash
 python3 {baseDir}/../../scripts/sheets_read.py \
   --sheet-id 1y73uKl9O2qhmf3JBgwrZxn93k2LX2hKe_KlOCCCTP2I \
-  --tab "Gastos mensuales Family"
+  --tab "Ppto Gastos Mensuales"
 ```
 
 El script usa la variable `GOOGLE_SERVICE_ACCOUNT_JSON` (JSON completo del service account) para autenticarse.
