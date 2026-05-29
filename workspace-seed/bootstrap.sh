@@ -17,13 +17,16 @@ if [ ! -d /data/venv ]; then
   python3 -m venv /data/venv
 fi
 
-# 3. Instalar dependencias Python para los scripts de sheets
+# 3. Instalar dependencias Python para los scripts de sheets + análisis financiero
 /data/venv/bin/pip install --quiet --upgrade pip
 /data/venv/bin/pip install --quiet \
   google-api-python-client \
   google-auth \
   google-auth-httplib2 \
-  google-auth-oauthlib
+  google-auth-oauthlib \
+  yfinance \
+  pandas \
+  numpy
 
 # 4. Symlink python3 del venv para que los scripts lo encuentren primero
 ln -sf /data/venv/bin/python3 /data/bin/python3 2>/dev/null || mkdir -p /data/bin && ln -sf /data/venv/bin/python3 /data/bin/python3
